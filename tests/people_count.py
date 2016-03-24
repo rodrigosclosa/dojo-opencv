@@ -20,9 +20,9 @@ hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
 while(1):
     _, img = cap.read()
 
-    gray=cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    #gray=cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    found, w = hog.detectMultiScale(gray, winStride=(8,8), padding=(32,32), scale=1.2, group_threshold=2)
+    found, w = hog.detectMultiScale(img, winStride=(8,8), padding=(32,32), scale=1.2)
     found_filtered = []
 
     for ri, r in enumerate(found):
@@ -32,11 +32,11 @@ while(1):
         else:
             found_filtered.append(r)
 
-    draw_detections(gray, found)
-    draw_detections(gray, found_filtered, 3)
+    draw_detections(img, found)
+    draw_detections(img, found_filtered, 3)
     print('%d (%d) found' % (len(found_filtered), len(found)))
 
-    cv2.imshow('img', gray)
+    cv2.imshow('img', img)
 
     k = cv2.waitKey(5) & 0xFF
     if k == 27:
