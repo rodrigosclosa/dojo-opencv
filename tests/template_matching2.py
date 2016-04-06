@@ -5,7 +5,7 @@ import numpy as np
 
 cap = cv2.VideoCapture(0)
 
-template = cv2.imread('mao.jpg')
+template = cv2.imread('su_fresh.jpg')
 template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
 template = cv2.Canny(template, 50, 200)
 (tH, tW) = template.shape[:2]
