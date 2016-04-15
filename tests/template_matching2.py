@@ -3,9 +3,9 @@ import glob
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('Arquivo_000.mov')
 
-template = cv2.imread('template4.jpg')
+template = cv2.imread('Arquivo_000.jpg')
 template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
 template = cv2.Canny(template, 50, 200)
 (tH, tW) = template.shape[:2]
