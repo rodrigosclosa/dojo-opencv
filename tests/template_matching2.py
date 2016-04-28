@@ -3,14 +3,19 @@ import glob
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture('Arquivo_000.mov')
+cap = cv2.VideoCapture(0)
 
-template = cv2.imread('Arquivo_000.jpg')
+# Load the image from file, converts it to gray scale and find the image edges (contornos)
+template = cv2.imread('caneca.jpg')
 template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
 template = cv2.Canny(template, 50, 200)
+
+# Gets the image height and width
 (tH, tW) = template.shape[:2]
-cv2.imshow("Template", template)
+#cv2.imshow("Template", template)
 #cv2.waitKey(0)
+
+edged = None
 
 while(1):
     _, image = cap.read()
@@ -54,11 +59,10 @@ while(1):
     (startX, startY) = (int(maxLoc[0] * r), int(maxLoc[1] * r))
     (endX, endY) = (int((maxLoc[0] + tW) * r), int((maxLoc[1] + tH) * r))
 
-    if (startX > 0 and endX > 0) and (startY > 0 and endY > 0):
-        # draw a bounding box around the detected result and display the image
-        cv2.rectangle(gray, (startX, startY), (endX, endY), (0, 0, 255), 2)
-
-    cv2.imshow("Image", gray)
+    # draw a bounding box around the detected result and display the image
+    if startX > 0 and startY > 0:
+        cv2.rectangle(image, (startX, startY), (endX, endY), (255, 255, 255), 2)
+    cv2.imshow("Image", image)
 
     k = cv2.waitKey(5) & 0xFF
     if k == 27:
