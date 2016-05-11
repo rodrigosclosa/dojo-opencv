@@ -8,8 +8,8 @@ while(1):
     _, frame = cap.read()
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    lower_yellow = np.array([0,150,50])
-    upper_yellow = np.array([153,255,255])
+    lower_yellow = np.array([0,50,50])
+    upper_yellow = np.array([100,255,255])
 
     mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
     res = cv2.bitwise_and(frame,frame, mask= mask)
