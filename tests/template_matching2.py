@@ -2,6 +2,7 @@ import imutils
 import glob
 import cv2
 import numpy as np
+from matplotlib import pyplot as plt
 
 cap = cv2.VideoCapture(0)
 
@@ -15,10 +16,31 @@ template = cv2.Canny(template, 50, 200)
 #cv2.imshow("Template", template)
 #cv2.waitKey(0)
 
+fgbg = cv2.createBackgroundSubtractorMOG2()
+
+img = cv2.imread('logo-larger.jpg',0)
+img = cv2.medianBlur(img,5)
+
+ret,th1 = cv2.threshold(img,127,255,cv2.THRESH_BINARY)
+
+plt.subplot(2,2,1),
+plt.imshow(th1,'gray')
+plt.title('Teste')
+plt.xticks([]),
+plt.yticks([])
+plt.show()
+
+
+template = th1
+
+
+
 edged = None
 
 while(1):
     _, image = cap.read()
+
+    fgmask = fgbg.apply(image)
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     found = None
@@ -38,7 +60,12 @@ while(1):
 
         # detect edges in the resized, grayscale image and apply template
         # matching to find the template in the image
-        edged = cv2.Canny(resized, 50, 200)
+        # edged = cv2.Canny(resized, 50, 200)
+        
+        edged = cv2.medianBlur(resized,5)
+        ret,edged = cv2.threshold(edged,127,255,cv2.THRESH_BINARY)
+        
+        
         result = cv2.matchTemplate(edged, template, cv2.TM_CCOEFF)
         (_, maxVal, _, maxLoc) = cv2.minMaxLoc(result)
 
@@ -65,7 +92,9 @@ while(1):
         # draw a bounding box around the detected result and display the image
         if startX > 0 and startY > 0:
             cv2.rectangle(image, (startX, startY), (endX, endY), (255, 255, 255), 2)
-    cv2.imshow("Image", image)
+    #cv2.imshow("Image", image)
+
+    cv2.imshow('frame',fgmask)
 
     k = cv2.waitKey(5) & 0xFF
     if k == 27:

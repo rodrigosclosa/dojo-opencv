@@ -1,27 +1,18 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 
-img1 = cv2.imread('foto.jpg')
-img2 = cv2.imread('padrao.jpg')
+img = cv2.imread('placa.jpg',0)
+img = cv2.medianBlur(img,5)
 
-cv2.imshow('teste', img1)
-cv2.imshow('teste1', img2)
+ret,th1 = cv2.threshold(img,127,255,cv2.THRESH_BINARY)
 
-cv2.waitKey(0)
-
-orb = cv2.ORB_create()
-
-kp1, des1 = orb.detectAndCompute(img1,None)
-kp2, des2 = orb.detectAndCompute(img2,None)
-
-bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
-
-matches = bf.match(des1,des2)
-matches = sorted(matches, key = lambda x:x.distance)
-
-img3 = cv2.drawMatches(img1,kp1,img2,kp2,matches[:10],None, flags=2)
-plt.imshow(img3)
+plt.subplot(2,2,1),
+plt.imshow(th1,'gray')
+plt.title('Teste')
+plt.xticks([]),
+plt.yticks([])
 plt.show()
 
-cv2.waitKey(0)
+
+
