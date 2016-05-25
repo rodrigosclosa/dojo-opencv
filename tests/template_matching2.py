@@ -7,21 +7,19 @@ from matplotlib import pyplot as plt
 cap = cv2.VideoCapture(0)
 
 # Load the image from file, converts it to gray scale and find the image edges (contornos)
-template = cv2.imread('caneca.jpg')
+template = cv2.imread('template3.jpg')
 template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
 template = cv2.Canny(template, 50, 200)
 
 # Gets the image height and width
-(tH, tW) = template.shape[:2]
+(tH, tW) = template.shape[::-1]
 #cv2.imshow("Template", template)
 #cv2.waitKey(0)
 
-fgbg = cv2.createBackgroundSubtractorMOG2()
+#img = cv2.imread('logo-larger.jpg',0)
+img = cv2.medianBlur(template,5)
 
-img = cv2.imread('logo-larger.jpg',0)
-img = cv2.medianBlur(img,5)
-
-ret,th1 = cv2.threshold(img,127,255,cv2.THRESH_BINARY)
+ret,th1 = cv2.threshold(template,127,255,cv2.THRESH_BINARY)
 
 plt.subplot(2,2,1),
 plt.imshow(th1,'gray')
@@ -39,8 +37,6 @@ edged = None
 
 while(1):
     _, image = cap.read()
-
-    fgmask = fgbg.apply(image)
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     found = None
@@ -92,9 +88,8 @@ while(1):
         # draw a bounding box around the detected result and display the image
         if startX > 0 and startY > 0:
             cv2.rectangle(image, (startX, startY), (endX, endY), (255, 255, 255), 2)
-    #cv2.imshow("Image", image)
 
-    cv2.imshow('frame',fgmask)
+    cv2.imshow("Image", image)
 
     k = cv2.waitKey(5) & 0xFF
     if k == 27:
