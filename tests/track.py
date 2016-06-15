@@ -9,8 +9,8 @@ import cv2
 
 # define the upper and lower boundaries for a color
 # to be considered "blue"
-blueLower = np.array([204,153,153])
-blueUpper = np.array([0,255,255])
+blueLower = np.array([91,227,213])
+blueUpper = np.array([203,255,255])
 
 # load the video
 camera = cv2.VideoCapture(0)
