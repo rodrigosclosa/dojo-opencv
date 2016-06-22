@@ -2,10 +2,29 @@ import imutils
 import glob
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
+import time
 
-blueLower = np.array([91,227,213])
-blueUpper = np.array([203,255,255])
+startXinicial = 0
+startYinicial = 0
+contador = 0
+contadorSaida = 0
+tempoContadorAchou = 30
+tempoContadorNaoAchou = 150
+yellowLower = np.array([91,227,213])
+yellowUpper = np.array([203,255,255])
+
+def avalia_placa(startX, startY, startXinicial, startYinicial, contador):
+    tolerancia = 10
+    if ((startXinicial >= startX - tolerancia and startXinicial <= startX + tolerancia)
+        and (startYinicial >= startY - tolerancia and startYinicial <= startY + tolerancia)):
+        contador += 1
+    else:
+        startXinicial = startX
+        startYinicial = startY
+        contador = 0
+
+    return startXinicial, startYinicial, contador
+
 
 cap = cv2.VideoCapture(0)
 
@@ -16,31 +35,18 @@ template = cv2.Canny(template, 50, 200)
 
 # Gets the image height and width
 (tH, tW) = template.shape[::-1]
-#cv2.imshow("Template", template)
-#cv2.waitKey(0)
 
-#img = cv2.imread('logo-larger.jpg',0)
 img = cv2.medianBlur(template,5)
 
 ret,th1 = cv2.threshold(template,127,255,cv2.THRESH_BINARY)
 
-plt.subplot(2,2,1),
-plt.imshow(th1,'gray')
-plt.title('Teste')
-plt.xticks([]),
-plt.yticks([])
-plt.show()
-
-
 template = th1
-
-
 
 edged = None
 
 while(1):
     _, image = cap.read()
-
+    #print strftime("%S", gmtime())
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     found = None
 
@@ -51,10 +57,9 @@ while(1):
     if not grabbed:
         break
 
-    # hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     # determine which pixels fall within the blue boundaries
     # and then blur the binary image
-    blue = cv2.inRange(frame, blueLower, blueUpper)
+    blue = cv2.inRange(frame, yellowLower, yellowUpper)
     blue = cv2.GaussianBlur(blue, (3, 3), 0)
 
     # find contours in the image
@@ -70,8 +75,6 @@ while(1):
         # compute the (rotated) bounding box around then
         # contour and then draw it
         rect = np.int32(cv2.boxPoints(cv2.minAreaRect(cnt)))
-        #cv2.drawContours(frame, [rect], -1, (0, 255, 0), 2)
-
 
         # loop over the scales of the image
         for scale in np.linspace(0.9, 1.0, 1.5)[::-1]:
@@ -99,36 +102,31 @@ while(1):
             result = cv2.matchTemplate(cannyEdge, template, cv2.TM_CCOEFF)
             (_, maxVal, _, maxLoc) = cv2.minMaxLoc(result)
 
-            # draw a bounding box around the detected region
-            # clone = np.dstack([edged, edged, edged])
-            # cv2.rectangle(clone, (maxLoc[0], maxLoc[1]),
-            #     (maxLoc[0] + tW, maxLoc[1] + tH), (0, 0, 255), 2)
-            # cv2.imshow("Visualize", clone)
-            # cv2.waitKey(0)
-
-            # if we have found a new maximum correlation value, then ipdate
-            # the bookkeeping variable
-            #if found is None or maxVal > found[0]:
-            #    found = (maxVal, maxLoc, r)
-
-        # unpack the bookkeeping varaible and compute the (x, y) coordinates
-        # of the bounding box based on the resized ratio
-        #if found is not None:
-            #(_, maxLoc, r) = found
+            # unpack the bookkeeping varaible and compute the (x, y) coordinates
+            # of the bounding box based on the resized ratio
             (startX, startY) = (int(maxLoc[0] * r), int(maxLoc[1] * r))
             (endX, endY) = (int((maxLoc[0] + tW) * r), int((maxLoc[1] + tH) * r))
 
             # draw a bounding box around the detected result and display the image
             if startX > 0 and startY > 0:
+                (startXinicial, startYinicial, contador) = avalia_placa(startX, startY, startXinicial, startYinicial, contador)
                 cv2.rectangle(frame, (startX, startY), (endX, endY), (255, 255, 255), 2)
+                if contador >= tempoContadorAchou:
+                    contadorSaida = 0
+                    cv2.putText(frame, "ACHEI", (startX, endY), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255))
+                else:
+                    contadorSaida += 1
+                if contadorSaida >= tempoContadorNaoAchou:
+                    cv2.putText(frame, "SUMIU", (startX, endY), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255))
 
-    #cv2.imshow("Image", image)
     cv2.imshow("Tracking", frame)
     cv2.imshow("Binary", blue)
 
     k = cv2.waitKey(5) & 0xFF
     if k == 27:
         break
+
+    #time.sleep(1)
 
 cv2.destroyAllWindows()
 cap.release()
