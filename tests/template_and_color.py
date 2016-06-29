@@ -4,6 +4,9 @@ import cv2
 import numpy as np
 import time
 
+
+frameWidth =0
+frameHeigth = 0
 startXinicial = 0
 startYinicial = 0
 contador = 0
@@ -25,8 +28,10 @@ def avalia_placa(startX, startY, startXinicial, startYinicial, contador):
 
     return startXinicial, startYinicial, contador
 
-
 cap = cv2.VideoCapture(0)
+_, imgSize = cap.read()
+
+frameHeigth, frameWidth, channels = imgSize.shape
 
 # Load the image from file, converts it to gray scale and find the image edges (contornos)
 template = cv2.imread('placa_cuidado.jpg')
@@ -44,13 +49,19 @@ template = th1
 
 edged = None
 
+
+# frameHeigth = cv2.VideoCapture.get(frame,CV_CAP_PROP_FRAME_HEIGHT)
+#frameHeigth = cap.get(cv2.CV_CAP_PROP_FRAME_HEIGHT)
+
 while(1):
-    _, image = cap.read()
+    #_, image = cap.read()
     #print strftime("%S", gmtime())
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    found = None
+
 
     (grabbed, frame) = cap.read()
+
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    found = None
 
     # check to see if we have reached the end of the
     # video
@@ -113,14 +124,23 @@ while(1):
                 cv2.rectangle(frame, (startX, startY), (endX, endY), (255, 255, 255), 2)
                 if contador >= tempoContadorAchou:
                     contadorSaida = 0
-                    cv2.putText(frame, "ACHEI", (startX, endY), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255))
+
+                    if startX > (frameWidth - 50) / 2:
+                        cv2.putText(frame, "ACHEI FEMININO", (startX, endY), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255))
+                    else:
+                        cv2.putText(frame, "ACHEI MASCULINO", (startX, endY), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255))
+
                 else:
                     contadorSaida += 1
                 if contadorSaida >= tempoContadorNaoAchou:
                     cv2.putText(frame, "SUMIU", (startX, endY), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255))
 
+    cv2.line(frame, (0,(frameHeigth / 2)),(frameWidth,(frameHeigth / 2)), (255, 255, 0), 5)
+    cv2.line(frame, (0, ((frameHeigth + 100) / 2)), (frameWidth, ((frameHeigth + 100) / 2)), (0, 0, 255), 5)
+    cv2.line(frame, ((frameWidth / 2), 0), ((frameWidth / 2), frameHeigth), (255, 0, 0), 50)
+    #cv2.line(frame, frameWidth/2, frameWidth, (255), 1, 8, 0)
     cv2.imshow("Tracking", frame)
-    cv2.imshow("Binary", blue)
+    #cv2.imshow("Binary", blue)
 
     k = cv2.waitKey(5) & 0xFF
     if k == 27:
