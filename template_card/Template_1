@@ -1,0 +1,77 @@
+<#assign temp = content.Temperature?number>
+<#assign hum = content.Humidity?number>
+<#assign dateDiff = (
+  (
+    .now?long
+    - updateTime?long
+  ) / (1000 * 60)
+)?int>
+<#if dateDiff gt 60>
+	<#assign isUpdated = false>
+<#else>
+	<#assign isUpdated = true>
+</#if>
+
+<#if temp gt 26>
+	<#assign bar = "0">
+	<#assign color = "rgb(184, 29, 12)">
+<#elseif temp gt 25>
+	<#assign bar = "40">
+	<#assign color = "rgb(231, 188, 0)">
+<#else>
+	<#if temp gt 22>
+		<#assign bar = (150 * ((1/4) * (26 - temp)))>
+	<#else>
+		<#assign bar = "150">
+	</#if>
+	<#assign color = "rgb(97, 144, 208)">
+</#if>
+
+
+
+
+ <div style="-webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.19); -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.19); box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.19);background: rgb(255,255,255);">
+		<div style="background: ${color}; color: rgb(255,255,255); padding: 35px 20px 50px 20px;">
+				<img style="margin: 0px 10px 0 0; float:left;" src="https://storage.googleapis.com/iot-connector-files/cooltemp/pin.png"/>
+				<div style="float:left; line-height: 17px;">Prédio: ${SENSOR_NAME}</div>
+		</div>
+		<div style="padding:20px 15px;" style="float:left;">
+			<div class="bar" style="float:right;">
+				<div style="position:relative; width: 21px;">
+					<img style="margin-left: 7px; height: 171px;" src="https://storage.googleapis.com/iot-connector-files/cooltemp/bar.jpg" />
+					<div style="border: solid 3px rgb(102,102,102); width: 21px;height: 21px; position:absolute; top: ${bar}px; border-radius: 7px; opacity: 0.8;"></div>
+				</div>
+			</div>
+			<div class="temperature" style="height: 80px;">
+				<div style="color: rgb(112,112,112);">Temperatura</div>
+				<img style="margin:0 10px 5px 0;" src="https://storage.googleapis.com/iot-connector-files/cooltemp/sensor.jpg" />
+				<span style="font-size:50px; color: rgb(112,112,112)">${temp?string["0.0"]}º</span>
+			</div>
+
+			<div class="humidity" style="float:left;">
+				<div style="color: rgb(112,112,112);">Umidade</div>
+				<img style="margin:0 10px 5px 0;" src="https://storage.googleapis.com/iot-connector-files/cooltemp/drops.jpg" />
+				<span  style="font-size:50px; color: rgb(112,112,112)">${hum?string["0"]}<span style="font-size: 35px;">%</span></span>
+			</div>
+			<div style="clear: both;"></div>
+			</div>
+			<#if isUpdated>
+				<div style="clear: both; font-size: 12px; text-align: center; padding-bottom: 14px; font-weight: bold; color: rgb(112,112,112);">
+					<img style="margin: 0 2px -5px 0;" src="https://storage.googleapis.com/iot-connector-files/cooltemp/clock.jpg" />
+					Atualizado
+					<#if dateDiff gt 1>
+						a ${dateDiff} minutos
+					<#elseif dateDiff == 1>
+						a 1 minuto
+					<#else>
+						agora
+					</#if>
+				</div>
+			<#else>
+
+				<div style="clear: both; font-size: 12px; text-align: center; padding-bottom: 14px; font-weight: bold; color: rgb(184, 29, 12);">
+					<img style="margin: 0 2px -5px 0;" src="https://storage.googleapis.com/iot-connector-files/cooltemp/clock-red.jpg" />
+					Sensor desatualizado
+				</div>
+			</#if>
+		</div>

@@ -1,0 +1,210 @@
+<#assign dateDiff = (
+  (
+    .now?long
+    - updateTime
+  ) / (1000 * 60)
+)?int>
+
+<#if sensor.metadata.CalendarId != "false">
+  <#if externalData.event?size gt 0>
+    <#assign timeToNextBooking = (
+      (
+        externalData.event[externalData.event?size - 1].content.dateStart?number?long - .now?long
+      ) / (1000 * 60)
+    )?int>
+  <#else>
+    <#assign timeToNextBooking = 0?int>
+  </#if>
+<#else>
+  <#assign timeToNextBooking = 1?int>
+</#if>
+
+<#if timeToNextBooking lt 0>
+
+  <#assign bookText = "Sala reservada">
+  <#assign calendarBarClass = "free-room-calendar-bar-ocupied">
+  <#assign buttonQuickChatClass = "free-room-button-disabled">
+  <#assign buttonBookingClass = "free-room-button-disabled">
+
+  <#if externalData.event[externalData.event?size - 1].content.isCheckin>
+    <#assign bookText = "Check-in realizado">
+  </#if>
+
+<#elseif timeToNextBooking == 1 && sensor.metadata.CalendarId == "false">
+
+  <#assign bookText = "Reservas indisponíveis">
+  <#assign calendarBarClass = "free-room-calendar-bar-ocupied">
+
+<#elseif timeToNextBooking == 0 || timeToNextBooking gt 0>
+
+  <#assign bookText = "Sala sem reserva">
+  <#assign calendarBarClass = "">
+  <#assign buttonQuickChatClass = "">
+  <#assign buttonBookingClass = "">
+
+</#if>
+
+<#if externalData.event?size gt 0>
+  <#if timeToNextBooking lt 15>
+    <#assign buttonQuickChatClass = "free-room-button-disabled">
+    <#assign buttonBookingClass = "free-room-button-disabled">
+  <#elseif timeToNextBooking lt 45>
+    <#assign buttonQuickChatClass = "">
+    <#assign buttonBookingClass = "free-room-button-disabled">
+  </#if>
+</#if>
+
+<#if content.busy=="true">
+	<#assign color = "rgb(181, 181, 181)">
+        <#assign textColor = "rgb(112,112,112)">
+	<#assign busyText = "Ocupada">
+	<#assign busyImage = "https://storage.googleapis.com/iot-connector-files/FreeRoom/error.jpg">
+	<#assign imageFilter = "-webkit-filter: grayscale(100%); filter: grayscale(100%); opacity: 0.6; filter: alpha(opacity=60);">
+<#else>
+	<#assign color = "rgb(75, 161, 53)">
+        <#assign textColor = "rgb(112,112,112)">
+	<#assign busyText = "Desocupada">
+	<#assign busyImage = "https://storage.googleapis.com/iot-connector-files/FreeRoom/check.jpg">
+	<#assign imageFilter = "">
+</#if>
+
+<#if dateDiff gt 60>
+	<#assign color = "rgb(181, 181, 181)">
+        <#assign textColor = "rgb(255,0,0)">
+	<#assign busyText = "Desatualizado">
+	<#assign busyImage = "https://storage.googleapis.com/iot-connector-files/FreeRoom/error.jpg">
+	<#assign imageFilter = "-webkit-filter: grayscale(100%); filter: grayscale(100%); opacity: 0.6; filter: alpha(opacity=60);">
+</#if>
+
+
+
+<style>
+	.calendar-small .reservation-name{
+		font-size:12px !important;
+		margin-bottom:10px !important;
+	}
+
+	.calendar-small .reservation-summary{
+		display:none;
+	}
+
+	.free-room-calendar-bar{
+		text-align: left;
+		width: 100%;
+		background: #3e66ea;
+		height: 35px;
+		line-height: 35px;
+	}
+
+	.free-room-calendar-bar-ocupied{
+		background: #d71f3c;
+	}
+
+	.free-room-button{
+		border: solid 1px #3e66ea;
+		color: #3e66ea !important;
+		padding: 0 10px;
+		line-height: 40px;
+		border-radius: 3px;
+		margin: 0 5px;
+		height: 40px;
+		display: inline-block;
+	}
+
+	.free-room-button-disabled{
+		background: #dbdbdb;
+		color: #bebebe !important;
+		border-color: #dbdbdb;
+
+	}
+
+	.free-room-button-small{
+		height: auto !important;
+		padding-bottom: 15px;
+	}
+
+	.free-room-button-small a{
+		display:block;
+		margin: 10px 5px !important;
+		text-align:center;
+    padding-top: 5px !important;
+	}
+</style>
+
+<script src="https://storage.googleapis.com/iot-connector-files/FreeRoom/Javascript/cit.freeroom.io/Javascript.js" />
+
+
+<div class="free-room" data-calendarId = "${sensor.metadata.CalendarId}" data-macAdress = "${sensor.id}"  data-sensorId = "${SENSOR_ID}" style="-webkit-box-shadow: 0px 2px 6px 1px rgba(0,0,0,0.30); -moz-box-shadow: 0px 2px 6px 1px rgba(0,0,0,0.30); box-shadow: 0px 2px 6px 1px rgba(0,0,0,0.30);background: rgb(255,255,255);" >
+	<img src="${sensor.metadata.Photo}" style="width: 100%;${imageFilter}"/>
+	<div style="background: ${color}; color: rgb(255,255,255); padding: 20px; position: relative; margin-top:-3px;">
+		<div style="font-size: 18px; color: rgb(255,255,255);">Sala</div>
+		<div style="font-size: 30px; color: rgb(255,255,255);">${sensor.metadata.Room}</div>
+	</div>
+	<div style="padding:20px 15px 10px 15px;" style="float:left;">
+		<div style="height:20px; float: left; margin: 5px 10px;">
+			<img style="margin:0 5px -5px 0;" src="${busyImage}" />
+			<span style="color: ${textColor}">${busyText} </span>
+		</div>
+		<div style="height:20px; float: left; margin: 5px 10px;">
+			<img style="margin:0 5px -5px 0;" src="https://storage.googleapis.com/iot-connector-files/FreeRoom/people.jpg" />
+			<span style="color: rgb(112,112,112)">${sensor.metadata.Capacity} pessoas</span>
+		</div>
+		<div style="height:20px; float: left; margin: 5px 10px;">
+			<img style="margin:0 5px -5px 0;" src="https://storage.googleapis.com/iot-connector-files/FreeRoom/pin-blue.jpg" />
+			<span style="color: rgb(112,112,112)">${sensor.metadata.Base} - ${sensor.metadata.Building} ${sensor.metadata.Floor}</span>
+		</div>
+		<#if sensor.metadata.HasProjector == "true">
+			<div style="height:20px; float: left; margin: 5px 10px;">
+				<img style="margin:0 5px -5px 0;" src="https://storage.googleapis.com/iot-connector-files/FreeRoom/projector.jpg" />
+				<span style="color: rgb(112,112,112)">Possuí projetor</span>
+			</div>
+		</#if>
+		<div style="clear: both;"></div>
+	</div>
+
+	<div class="free-room-calendar-bar free-room-calendar-bar-full ${calendarBarClass}" style="display:none;">
+		<img style="margin:7px 0 0 10px; float: left;;" src="https://storage.googleapis.com/iot-connector-files/FreeRoom/Calendar-Icon.png">
+		<span align="left" style="color: rgb(255,255,255); font-size: 14px; margin-left:10px;">Reservas desta sala</span>
+		<span class="bar-text" style="color: rgb(255,255,255); float: right; margin-right: 15px; font-size: 14px; font-weight: bold;">
+        ${bookText}
+		</span>
+	</div>
+
+	<div class="free-room-calendar-bar free-room-calendar-bar-small ${calendarBarClass}" style="display:none;">
+		<img style="margin:7px 0 0 10px; float: left;" src="https://storage.googleapis.com/iot-connector-files/FreeRoom/Calendar-Icon.png">
+		<span class="bar-text" style="color: rgb(255,255,255); float: left; margin-left: 15px; font-size: 12px; font-weight: bold; margin-top: 7px;">
+      ${bookText}
+		</span>
+	</div>
+
+  <#list externalData.event!?sort_by(['content','dateStart'])>
+	<table class="calendar" style="text-align: left; width: 100%; margin-bottom: 15px; display:none;">
+		<tbody>
+      <#items as event>
+        <tr>
+          <td style="border-bottom: solid 1px #ccc;">
+            <div style="color: rgb(0, 0, 0); font-size: 15px; margin:8px 0 0 5px; width:90%;" class="reservation-name">
+              ${event.content.creatorName}
+            </div>
+            <div style="color: rgb(0,0,0); font-size: 12px; margin: 0 0 8px 8px; width: 90%;" class="reservation-summary">
+              ${event.content.title}
+            </div>
+          </td>
+          <td style="border-bottom: solid 1px #ccc; width: 150px;color: rgb(140,140,140);font-size: 12px;font-weight: bold;text-align: center;vertical-align: middle;">
+            <img src="https://storage.googleapis.com/iot-connector-files/FreeRoom/clock.png" style="float: left;display: inline;margin: 10px 0px">
+            <span style="float: left; margin-top: 13px; margin-left: 5px;"> ${event.content.dateStart?number?number_to_time?string.short} - ${event.content.dateEnd?number?number_to_time?string.short} </span>
+          </td>
+        </tr>
+      </#items>
+    </tbody>
+	</table>
+  </#list>
+
+
+	<#if metadata.showButtons>
+		<div class="buttons" style="text-align: right; margin: 15px 15px; height: 65px; display:none;">
+			<a class="papo-rapido-button free-room-button ${buttonQuickChatClass}" href="javascript:void(0);">Papo Rápido (30 min)</a>
+			<a class="reuniao-button free-room-button ${buttonBookingClass}" href="javascript:void(0);">Reunião (1h)</a>
+		</div>
+	</#if>
+</div>

@@ -1,7 +1,6 @@
 import requests
 import json
 
-
 class GarageApi:
     def __init__(self, address='fc:c2:de:40:db:0f', token='rOxsxbXsj5Zm'):
         self.BASE_URL = 'http://api.iot.ciandt.com/v2/data/'

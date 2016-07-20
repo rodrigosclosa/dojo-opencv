@@ -1,22 +1,21 @@
-import imutils
+import datetime
 import cv2
+import imutils
 import numpy as np
 from utils.GarageUtils import GarageApi
-import datetime
+
+from utils import GarageUtils
+
 
 class ObjectDetector:
-    #tempoContadorAchou = 30
-    #tempoContadorNaoAchou = 150
-    #caminhoImagem = 'placa_cuidado.jpg'
-    #yellowLower = np.array([91, 227, 213])
-    #yellowUpper = np.array([203, 255, 255])
-
     def __init__(self):
         self.tempoContadorAchou = 30
         self.tempoContadorNaoAchou = 150
         self.caminhoImagem = 'placa_cuidado.jpg'
         self.yellowLower = np.array([91, 227, 213])
         self.yellowUpper = np.array([203, 255, 255])
+        self.statusBanheiroAnterior = np.array([2, 2])
+        self.statusBanheiroAtual = np.array([0, 0])
 
         self.garageApi = GarageApi()
 
@@ -61,20 +60,23 @@ class ObjectDetector:
 
                 if startX > (frameWidth - 50) / 2:
                     mensagem = "AF"
-                    self.enviar_status_plataforma(1, 0)
+                    self.statusBanheiroAtual = np.array([1, 0])
+                    #self.enviar_status_plataforma(1, 0)
                 else:
                     mensagem = "AM"
-                    self.enviar_status_plataforma(0, 1)
+                    self.statusBanheiroAtual = np.array([0, 1])
+                    #self.enviar_status_plataforma(0, 1)
                     self.escrever_tela(frame,mensagem, startX, endY)
 
             else:
                 contadorSaida += 1
 
             if contadorSaida >= self.tempoContadorNaoAchou:
+                self.statusBanheiroAtual = np.array([0, 0])
                 self.escrever_tela(frame, "S", 0, endY)
-                self.enviar_status_plataforma(0, 0)
+                #self.enviar_status_plataforma(0, 0)
 
-        return contador, contadorSaida, startXinicial, startYinicial
+        return contador, contadorSaida, startXinicial, startYinicial, self.statusBanheiroAtual
 
     def desenha_linhas(self, frame) :
         frameHeigth, frameWidth, channels = frame.shape
@@ -123,6 +125,14 @@ class ObjectDetector:
 
         return startX, startY, endX, endY
 
+    def integrar_plataforma_iot(self):
+        if not np.array_equal(self.statusBanheiroAnterior, self.statusBanheiroAtual):
+            print self.statusBanheiroAnterior
+            self.enviar_status_plataforma(self.statusBanheiroAtual[0], self.statusBanheiroAtual[1])
+
+            self.statusBanheiroAnterior[0] = self.statusBanheiroAtual[0]
+            self.statusBanheiroAnterior[1] = self.statusBanheiroAtual[1]
+
     def startDetector(self):
         startXinicial = 0
         startYinicial = 0
@@ -146,17 +156,22 @@ class ObjectDetector:
                     startX, startY, endX, endY = self.recuperar_posicoes(frame, scale)
 
                     if (startX + startY + endX + endY) > 0:
-                        (contador, contadorSaida, startXinicial, startYinicial) = self.procura_placa(startX, startY,
-                                                                                                     startXinicial,
-                                                                                                     startYinicial,
-                                                                                                     contador,
-                                                                                                     contadorSaida,
-                                                                                                     frame, endX, endY)
+                        (contador, contadorSaida, startXinicial, startYinicial, self.statusBanheiroAtual) = self.procura_placa(startX, startY,
+                                                                                                                startXinicial,
+                                                                                                                startYinicial,
+                                                                                                                contador,
+                                                                                                                contadorSaida,
+                                                                                                                frame, endX, endY)
                     else:
                         break
 
-            #self.desenha_linhas(frame)
-            #cv2.imshow("Tracking", frame)
+            self.desenha_linhas(frame)
+            cv2.imshow("Tracking", frame)
+
+            print str(self.statusBanheiroAnterior) + ' ANTERIOR'
+            print str(self.statusBanheiroAtual) + ' ATUAL'
+
+            self.integrar_plataforma_iot(self)
 
             k = cv2.waitKey(5) & 0xFF
             if k == 27:
