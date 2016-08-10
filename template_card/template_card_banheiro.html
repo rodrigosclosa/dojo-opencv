@@ -1,8 +1,12 @@
 <#assign banheiroMasculino = content.banheiroMasculino?number>
 <#assign banheiroFeminino = content.banheiroFeminino?number>
 <#assign data = content.data?date>
-<#assign textoStatusMasculino = "LIVRE">
-<#assign textoStatusFeminino = "LIVRE">
+<#assign textoStatusMasculino = "Livre">
+<#assign textoStatusFeminino = "Livre">
+<#assign classeImagemOcupadoMasculino = "">
+<#assign classeTextoOcupadoMasculino = "livreTexto">
+<#assign classeImagemOcupadoFeminino = "">
+<#assign classeTextoOcupadoFeminino = "livreTexto">
 <#assign imagemMasculino = "http://turquiaplacas.com.br/wp-content/uploads/2013/09/Banheiro-Masculino.jpg">
 <#assign imagemFeminino= "http://turquiaplacas.com.br/wp-content/uploads/2013/09/Banheiro-Feminino.jpg">
 <#assign dateDiff = (
@@ -19,25 +23,38 @@
 
 <#if banheiroMasculino == 1>
   <#assign textoStatusMasculino = "Em Limpeza">
-  <#assign imagemMasculino = "Banheiro-Masculino-ocupado.jpg">
-<#elseif banheiroMasculino == 0>
-  <#assign textoStatusMasculino = "LIVRE">
-  <#assign imagemMasculino = "http://turquiaplacas.com.br/wp-content/uploads/2013/09/Banheiro-Masculino.jpg">
+  <#assign classeImagemOcupadoMasculino = "ocupadoImagem">
+  <#assign classeTextoOcupadoMasculino = "ocupadoTexto">
 </#if>
 <#if banheiroFeminino == 1>
   <#assign textoStatusFeminino = "Em Limpeza">
-  <#assign imagemFeminino = "Banheiro-Feminino-ocupado.jpg">
-<#elseif banheiroMasculino == 0>
-  <#assign textoStatusFeminino = "LIVRE">
-  <#assign imagemFeminino = "http://turquiaplacas.com.br/wp-content/uploads/2013/09/Banheiro-Feminino.jpg">
+  <#assign classeImagemOcupadoFeminino = "ocupadoImagem">
+  <#assign classeTextoOcupadoFeminino = "ocupadoTexto">
 </#if>
 
 <style>
+  h2 {
+    font-size: 30px !important;
+  }
+
   .ab_center
   {
     height:200px;
     width:100%;
     min-width: 400px;
+  }
+
+  .ocupadoImagem {
+    opacity: 0.2;
+    filter: alpha(opacity=20); /* For IE8 and earlier */
+  }
+
+  .livreTexto {
+    color: green !important;
+  }
+
+  .ocupadoTexto {
+    color: red !important;
   }
 </style>
 
@@ -48,12 +65,12 @@
   </div>
   <div class="ab_center">
     <div align="center" style="float:left;">
-      <img src="${imagemMasculino}" height="200" />
-      <div align="center"><h2>${textoStatusMasculino}</h2></div>
+      <img class="${classeImagemOcupadoMasculino}" src="${imagemMasculino}" height="200" />
+      <div align="center"><h2 class="${classeTextoOcupadoMasculino}">${textoStatusMasculino}</h2></div>
     </div>
     <div align="center" style="float:right;">
-      <img src="${imagemFeminino}" height="200"/>
-      <div align="center"><h2>${textoStatusFeminino}</h2></div>
+      <img class="${classeImagemOcupadoFeminino}" src="${imagemFeminino}" height="200"/>
+      <div align="center"><h2 class="${classeTextoOcupadoFeminino}">${textoStatusFeminino}</h2></div>
     </div>
   </div>
   <div style="padding:20px 15px;">

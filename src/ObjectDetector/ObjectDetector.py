@@ -1,3 +1,4 @@
+import os
 import datetime
 import cv2
 import imutils
@@ -127,11 +128,25 @@ class ObjectDetector:
 
     def integrar_plataforma_iot(self):
         if not np.array_equal(self.statusBanheiroAnterior, self.statusBanheiroAtual):
-            print self.statusBanheiroAnterior
+            self.escrever_log()
             self.enviar_status_plataforma(self.statusBanheiroAtual[0], self.statusBanheiroAtual[1])
-
             self.statusBanheiroAnterior[0] = self.statusBanheiroAtual[0]
             self.statusBanheiroAnterior[1] = self.statusBanheiroAtual[1]
+
+    def escrever_log(self):
+        nomeArquivo = "logs/log-" + datetime.datetime.strftime(datetime.datetime.now(), '%d-%m-%Y')
+        if os.path.exists(nomeArquivo):
+            f = file(nomeArquivo, "a")
+        else:
+            f = file(nomeArquivo, "w")
+
+        f.write("\n\nStatus Anterior: [Masculino, Feminino] " + str(self.statusBanheiroAnterior))
+        f.write("\nStatus Atual: [Masculino, Feminino] " + str(self.statusBanheiroAtual))
+        f.write("\nAtualizacao: " + datetime.datetime.strftime(datetime.datetime.now(), '%d-%m-%Y %H:%M:%S'))
+
+        f.close()
+
+
 
     def startDetector(self):
         startXinicial = 0
@@ -165,13 +180,10 @@ class ObjectDetector:
                     else:
                         break
 
-            self.desenha_linhas(frame)
-            cv2.imshow("Tracking", frame)
+            #self.desenha_linhas(frame)
+            #cv2.imshow("Tracking", frame)
 
-            print str(self.statusBanheiroAnterior) + ' ANTERIOR'
-            print str(self.statusBanheiroAtual) + ' ATUAL'
-
-            self.integrar_plataforma_iot(self)
+            self.integrar_plataforma_iot()
 
             k = cv2.waitKey(5) & 0xFF
             if k == 27:
