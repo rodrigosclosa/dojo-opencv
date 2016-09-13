@@ -1,27 +1,26 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 
-img1 = cv2.imread('foto.jpg')
-img2 = cv2.imread('padrao.jpg')
+cap = cv2.VideoCapture(0)
 
-cv2.imshow('teste', img1)
-cv2.imshow('teste1', img2)
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
-cv2.waitKey(0)
+while(1):
+    _, image = cap.read()
 
-orb = cv2.ORB_create()
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-kp1, des1 = orb.detectAndCompute(img1,None)
-kp2, des2 = orb.detectAndCompute(img2,None)
+    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+    for (x,y,w,h) in faces:
+        cv2.rectangle(image,(x,y),(x+w,y+h),(255,0,0),2)
 
-bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+    cv2.imshow("Image", image)
+    
+    k = cv2.waitKey(5) & 0xFF
+    if k == 27:
+        break
 
-matches = bf.match(des1,des2)
-matches = sorted(matches, key = lambda x:x.distance)
+cv2.destroyAllWindows()
+cap.release()
 
-img3 = cv2.drawMatches(img1,kp1,img2,kp2,matches[:10],None, flags=2)
-plt.imshow(img3)
-plt.show()
-
-cv2.waitKey(0)
