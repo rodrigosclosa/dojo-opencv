@@ -1,0 +1,207 @@
+{
+ "kind": "discovery#restDescription",
+ "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/hyyXG-h5ffTRdFOL2QzFRqwvlxA\"",
+ "discoveryVersion": "v1",
+ "id": "banheiros:v1",
+ "name": "banheiros",
+ "version": "v1",
+ "description": "This is an API",
+ "ownerDomain": "endpoint.backendopencv.ciandt.com",
+ "ownerName": "endpoint.backendopencv.ciandt.com",
+ "icons": {
+  "x16": "http://www.google.com/images/icons/product/search-16.gif",
+  "x32": "http://www.google.com/images/icons/product/search-32.gif"
+ },
+ "protocol": "rest",
+ "baseUrl": "https://dojo-opencv-cit.appspot.com/_ah/api/banheiros/v1/",
+ "basePath": "/_ah/api/banheiros/v1/",
+ "rootUrl": "https://dojo-opencv-cit.appspot.com/_ah/api/",
+ "servicePath": "banheiros/v1/",
+ "batchPath": "batch",
+ "parameters": {
+  "alt": {
+   "type": "string",
+   "description": "Data format for the response.",
+   "default": "json",
+   "enum": [
+    "json"
+   ],
+   "enumDescriptions": [
+    "Responses with Content-Type of application/json"
+   ],
+   "location": "query"
+  },
+  "fields": {
+   "type": "string",
+   "description": "Selector specifying which fields to include in a partial response.",
+   "location": "query"
+  },
+  "key": {
+   "type": "string",
+   "description": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+   "location": "query"
+  },
+  "oauth_token": {
+   "type": "string",
+   "description": "OAuth 2.0 token for the current user.",
+   "location": "query"
+  },
+  "prettyPrint": {
+   "type": "boolean",
+   "description": "Returns response with indentations and line breaks.",
+   "default": "true",
+   "location": "query"
+  },
+  "quotaUser": {
+   "type": "string",
+   "description": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+   "location": "query"
+  },
+  "userIp": {
+   "type": "string",
+   "description": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+   "location": "query"
+  }
+ },
+ "auth": {
+  "oauth2": {
+   "scopes": {
+    "https://www.googleapis.com/auth/userinfo.email": {
+     "description": "View your email address"
+    }
+   }
+  }
+ },
+ "schemas": {
+  "Banheiro": {
+   "id": "Banheiro",
+   "type": "object",
+   "properties": {
+    "andar": {
+     "type": "string"
+    },
+    "descricao": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string"
+    },
+    "predio": {
+     "type": "string"
+    },
+    "tipo": {
+     "$ref": "TipoBanheiro"
+    }
+   }
+  },
+  "BanheiroCollection": {
+   "id": "BanheiroCollection",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Banheiro"
+     }
+    }
+   }
+  },
+  "TipoBanheiro": {
+   "id": "TipoBanheiro",
+   "type": "string",
+   "enum": [
+    "F",
+    "M"
+   ],
+   "enumDescriptions": [
+    "",
+    ""
+   ]
+  }
+ },
+ "methods": {
+  "getBanheiro": {
+   "id": "banheiros.getBanheiro",
+   "path": "get/{id}",
+   "httpMethod": "GET",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "response": {
+    "$ref": "Banheiro"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getBanheiros": {
+   "id": "banheiros.getBanheiros",
+   "path": "get",
+   "httpMethod": "GET",
+   "parameters": {
+    "predio": {
+     "type": "string",
+     "location": "query"
+    }
+   },
+   "response": {
+    "$ref": "BanheiroCollection"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "insertBanheiro": {
+   "id": "banheiros.insertBanheiro",
+   "path": "new",
+   "httpMethod": "POST",
+   "request": {
+    "$ref": "Banheiro",
+    "parameterName": "resource"
+   },
+   "response": {
+    "$ref": "Banheiro"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "removeBanheiro": {
+   "id": "banheiros.removeBanheiro",
+   "path": "delete/{id}",
+   "httpMethod": "DELETE",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "updateBanheiro": {
+   "id": "banheiros.updateBanheiro",
+   "path": "update",
+   "httpMethod": "PUT",
+   "request": {
+    "$ref": "Banheiro",
+    "parameterName": "resource"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  }
+ }
+}

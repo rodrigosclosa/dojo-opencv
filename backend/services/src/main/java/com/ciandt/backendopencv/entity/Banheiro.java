@@ -15,7 +15,7 @@ public class Banheiro {
     private String id;
 
     private String descricao;
-
+    @Index
     private String predio;
 
     private String andar;

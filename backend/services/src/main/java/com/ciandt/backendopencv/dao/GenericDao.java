@@ -27,8 +27,9 @@ public class GenericDao<T> implements IGenericDao<T> {
     }
 
     @Override
-    public void insert(T entity) {
-        save(entity);
+    public T insert(T entity) {
+         save(entity);
+        return entity;
     }
 
     @Override
@@ -72,6 +73,11 @@ public class GenericDao<T> implements IGenericDao<T> {
     @Override
     public T getById(Long id) {
         return ofy().load().type(clazz).id(id).now();
+    }
+
+    @Override
+    public T getByKey(String id) {
+        return ofy().load().key(Key.create(clazz, id)).now();
     }
 
     @Override

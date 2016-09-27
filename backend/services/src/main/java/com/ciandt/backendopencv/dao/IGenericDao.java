@@ -11,7 +11,7 @@ import java.util.List;
 public interface IGenericDao<T> {
 
     Key<T> save(T entity);
-    void insert(T entity);
+    T insert(T entity);
     void delete(T entity);
     void update(T entity);
     List<T> listAll();
@@ -20,6 +20,7 @@ public interface IGenericDao<T> {
     T getByProperty(String propName, Object propValue);
     T getByFilter(Query.Filter filtro);
     T getById(Long id);
+    T getByKey(String id);
     T getByKey(Long id);
     List<T> listByProperty(String propName, Object propValue);
     List<T> listByProperty(String propName, Object propValue, Integer limit);
