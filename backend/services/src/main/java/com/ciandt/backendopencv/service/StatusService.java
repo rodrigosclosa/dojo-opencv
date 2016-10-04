@@ -66,13 +66,6 @@ public class StatusService {
 
         }
 
-        Status s = statusDAO.getByKey(item.getId());
-
-        if(s != null){
-
-            throw new ConflictException("Status já cadastrado");
-        }
-
         return statusDAO.insert(item);
 
 
