@@ -47,8 +47,6 @@ public class ContadorService {
 
         if(item == null){
             throw new ConflictException("Contador não informado");
-        }else if(item.getId()== null){
-            throw new ConflictException("Id Não informado");
         }else if(item.getContador()== null){
             throw new ConflictException("Contador Não informado");
         }else if(item.getData()== null){
@@ -70,8 +68,6 @@ public class ContadorService {
 
         if(item == null){
             throw new ConflictException("Contador não informado");
-        }else if(item.getId()== null){
-            throw new ConflictException("Id Não informado");
         }else if(item.getContador()== null){
             throw new ConflictException("Contador Não informado");
         }else if(item.getData()== null){
