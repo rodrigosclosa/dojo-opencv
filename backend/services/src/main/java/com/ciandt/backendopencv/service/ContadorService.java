@@ -55,12 +55,6 @@ public class ContadorService {
             throw new ConflictException("Banheiro Não informado");
         }
 
-        Contador b = contadorDAO.getByKey(item.getId());
-
-        if(b != null){
-            throw new ConflictException("Contador já cadastrado");
-        }
-
         return contadorDAO.insert(item);
     }
 
