@@ -40,13 +40,27 @@ class ObjectDetector:
 
     def enviar_status_plataforma(self, statusF, statusM):
         payload = \
-            {'content':
-                 {  'predio': '23B-Terreo',
-                    'banheiroFeminino': statusF,
-                    'banheiroMasculino': statusM,
-                    'data': datetime.datetime.strftime(datetime.datetime.now(), '%d-%m-%Y %H:%M:%S')
-                  }
-             }
+            {
+                'content':
+                {
+                    "data": datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%dT%H:%M:%S'),
+                    "idBanheiro": "23BF1",
+                    "manutencao": statusF = 1
+                }
+            }
+
+        self.garageApi.post(payload)
+
+        payload = \
+            {
+                'content':
+                {
+                    "data": datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%dT%H:%M:%S'),
+                    "idBanheiro": "23BM1",
+                    "manutencao": statusM = 1
+                }
+            }
+            
         self.garageApi.post(payload)
 
     def procura_placa (self, startX, startY, startXinicial, startYinicial, contador, contadorSaida, frame, endX, endY):

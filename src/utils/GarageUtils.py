@@ -3,7 +3,7 @@ import json
 
 class GarageApi:
     def __init__(self, address='', token=''):
-        self.BASE_URL = 'http://api.iot.ciandt.com/v2/data/'
+        self.BASE_URL = 'https://dojo-opencv-cit.appspot.com/_ah/api/status/v1/new'
         self.ADDRESS = address
         self.TOKEN = token
 
