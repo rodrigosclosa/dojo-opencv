@@ -5,7 +5,11 @@
         <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
         <init-param>
             <param-name>services</param-name>
-            <param-value>com.ciandt.backendopencv.endpoint.BanheiroEndpoint, com.ciandt.backendopencv.endpoint.ContadorEndpoint</param-value>
+            <param-value>
+                com.ciandt.backendopencv.endpoint.BanheiroEndpoint,
+                com.ciandt.backendopencv.endpoint.ContadorEndpoint,
+                com.ciandt.backendopencv.endpoint.StatusEndpoint
+            </param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

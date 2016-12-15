@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/hyyXG-h5ffTRdFOL2QzFRqwvlxA\"",
+ "etag": "\"ODRTh3xaRR64wpeXJSlF33HMN-0/cOihL_oIDYkod0Hyb7C1bqLXvcc\"",
  "discoveryVersion": "v1",
  "id": "banheiros:v1",
  "name": "banheiros",
@@ -9,8 +9,8 @@
  "ownerDomain": "endpoint.backendopencv.ciandt.com",
  "ownerName": "endpoint.backendopencv.ciandt.com",
  "icons": {
-  "x16": "http://www.google.com/images/icons/product/search-16.gif",
-  "x32": "http://www.google.com/images/icons/product/search-32.gif"
+  "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
+  "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
  },
  "protocol": "rest",
  "baseUrl": "https://dojo-opencv-cit.appspot.com/_ah/api/banheiros/v1/",
@@ -88,6 +88,9 @@
     },
     "predio": {
      "type": "string"
+    },
+    "statusBanheiro": {
+     "type": "boolean"
     },
     "tipo": {
      "$ref": "TipoBanheiro"

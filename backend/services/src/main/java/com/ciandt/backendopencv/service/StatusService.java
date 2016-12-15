@@ -48,10 +48,6 @@ public class StatusService {
         if(item == null){
             throw new ConflictException("Status não informado");
 
-        }else if(item.getId()== null){
-
-            throw new ConflictException("Id Não informado");
-
         }else if(item.getData()== null){
 
             throw new ConflictException("Data Não informada");

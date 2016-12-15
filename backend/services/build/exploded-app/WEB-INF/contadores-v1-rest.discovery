@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"zRMgE0l9nVDW4S28VYYcYQF9UW4/8ngRblt5S_bDMk7r-SEXMl3sYoo\"",
+ "etag": "\"ODRTh3xaRR64wpeXJSlF33HMN-0/maRSaRIbNRSQU5WozDxEREDN4Bk\"",
  "discoveryVersion": "v1",
  "id": "contadores:v1",
  "name": "contadores",
@@ -9,8 +9,8 @@
  "ownerDomain": "endpoint.backendopencv.ciandt.com",
  "ownerName": "endpoint.backendopencv.ciandt.com",
  "icons": {
-  "x16": "http://www.google.com/images/icons/product/search-16.gif",
-  "x32": "http://www.google.com/images/icons/product/search-32.gif"
+  "x16": "https://www.gstatic.com/images/branding/product/1x/googleg_16dp.png",
+  "x32": "https://www.gstatic.com/images/branding/product/1x/googleg_32dp.png"
  },
  "protocol": "rest",
  "baseUrl": "https://dojo-opencv-cit.appspot.com/_ah/api/contadores/v1/",
