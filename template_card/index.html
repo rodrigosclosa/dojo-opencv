@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Controle de banheiros</title>
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .navbar-brand {
+            padding: 8px 15px;
+        }
+        
+        .opacity {
+            opacity: 0.2;
+            filter: alpha(opacity=20); /* For IE8 and earlier */
+        }
+
+        .panel {
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19) !important;
+        }
+
+        .thumbnail {
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    <img alt="Brand" src="images/cit.png" height="30">
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                url: "https://dojo-opencv-cit.appspot.com/_ah/api/banheiros/v1/get/",
+                context: document.body
+            })
+            .success(function(data) {
+                popularTela(data);                    
+            });
+            
+            function popularTela(data) { 
+                $(data.items).each(function (index, item) {
+                    montaCards(item);                                       
+                });                
+
+                
+            }            
+        });
+
+        function montaCards(item) {
+            var statusMasculino = false;
+            var statusFeminino = false;
+            var predio;            
+            var imagemBanheiro;
+            var cardBanheiro;   
+
+            if (item.tipo === "M") {
+                imagemBanheiro = "images/banheiro-masculino.jpg";
+                cardBanheiro = "masculino";
+            } else {
+                imagemBanheiro = "images/banheiro-feminino.jpg";
+                cardBanheiro = "feminino";
+            }
+
+            var html = 
+                "<div class='col-sm-4 col-md-3'>\
+                    <div class='thumbnail thumbnail-" + cardBanheiro + "'>\
+                        <img src='" + imagemBanheiro + "' alt='...' class='imagem-card-" + cardBanheiro + " img-rounded'>\
+                        <div class='caption'>\
+                            <h4 class='predio-" + cardBanheiro + "'><b>Prédio:</b> </h4>\
+                            <h4 class='andar-" + cardBanheiro + "'><b>Andar:</b> </h4>\
+                            <h3><span class='card-status-" + cardBanheiro + "'></h3>\
+                        </div>\
+                    </div>";
+
+            $(".row").append(html);
+            
+            $(".predio-" + cardBanheiro).append(item.predio);
+            $(".andar-" + cardBanheiro).append(item.andar);
+            
+            if (item.statusBanheiro === false) {                
+                $(".card-status-" + cardBanheiro).text("Livre").addClass("label label-success");
+                $(".thumbnail-" + cardBanheiro).addClass("bg-success");
+            } else {
+                $(".card-status-" + cardBanheiro).text("Em Manutenção").addClass("label label-danger");
+                $(".thumbnail-" + cardBanheiro).addClass("bg-danger");
+                $(".imagem-card-" + cardBanheiro).addClass("opacity");
+            }
+        }
+    </script>
+</body>
+
+</html>
