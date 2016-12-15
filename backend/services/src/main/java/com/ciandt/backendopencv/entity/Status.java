@@ -17,6 +17,7 @@ public class Status {
     @Index
     private String idBanheiro;
 
+    @Index
     private Date data;
 
     private Boolean manutencao;

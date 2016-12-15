@@ -7,4 +7,5 @@ import com.ciandt.backendopencv.entity.Banheiro;
  */
 
 public class BanheiroDAO extends GenericDao<Banheiro> {
+
 }

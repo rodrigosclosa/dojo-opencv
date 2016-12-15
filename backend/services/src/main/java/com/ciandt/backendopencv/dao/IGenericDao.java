@@ -15,6 +15,9 @@ public interface IGenericDao<T> {
     void delete(T entity);
     void update(T entity);
     List<T> listAll();
+
+    List<T> listAllOrder(String order);
+
     int countAll();
     List<T> listAll(Integer limit);
     T getByProperty(String propName, Object propValue);

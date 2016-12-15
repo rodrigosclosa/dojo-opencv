@@ -41,24 +41,18 @@ class ObjectDetector:
     def enviar_status_plataforma(self, statusF, statusM):
         payload = \
             {
-                'content':
-                {
-                    "data": datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%dT%H:%M:%S'),
-                    "idBanheiro": "23BF1",
-                    "manutencao": statusF = 1
-                }
+                "data": datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%dT%H:%M:%S'),
+                "idBanheiro": "PRISMAF1",
+                "manutencao": statusF
             }
 
         self.garageApi.post(payload)
 
         payload = \
             {
-                'content':
-                {
-                    "data": datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%dT%H:%M:%S'),
-                    "idBanheiro": "23BM1",
-                    "manutencao": statusM = 1
-                }
+                "data": datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%dT%H:%M:%S'),
+                "idBanheiro": "PRISMAM1",
+                "manutencao": statusM
             }
             
         self.garageApi.post(payload)
@@ -68,7 +62,7 @@ class ObjectDetector:
         if startX > 0 and startY > 0:
             (startXinicial, startYinicial, contador) = self.avalia_placa(startX, startY, startXinicial, startYinicial, contador)
 
-            #cv2.rectangle(frame, (startX, startY), (endX, endY), (255, 255, 255), 2)
+            cv2.rectangle(frame, (startX, startY), (endX, endY), (255, 255, 255), 2)
 
             if contador >= self.tempoContadorAchou:
                 contadorSaida = 0
@@ -195,7 +189,7 @@ class ObjectDetector:
                         break
 
             #self.desenha_linhas(frame)
-            #cv2.imshow("Tracking", frame)
+            cv2.imshow("Tracking", frame)
 
             self.integrar_plataforma_iot()
 

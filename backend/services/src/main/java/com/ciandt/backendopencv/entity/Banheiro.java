@@ -42,7 +42,7 @@ public class Banheiro {
         Status statusretorno = null;
         List<Status> statusList = ofy().transactionless().load().type(Status.class).filter("idBanheiro",this.id).list();
         for(Status status : statusList){
-            
+
             if(statusretorno == null || status.getData().after(statusretorno.getData())){
                 statusretorno = status;
             }

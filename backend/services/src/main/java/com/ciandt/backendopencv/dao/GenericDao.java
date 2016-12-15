@@ -49,6 +49,12 @@ public class GenericDao<T> implements IGenericDao<T> {
     }
 
     @Override
+    public List<T> listAllOrder(String order) {
+        Query<T> query = ofy().load().type(clazz).order(order);
+        return query.list();
+    }
+
+    @Override
     public int countAll() {
         Query<T> query = ofy().load().type(clazz);
         return query.count();
