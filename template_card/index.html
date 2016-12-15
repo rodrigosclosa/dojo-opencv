@@ -80,23 +80,22 @@
             var statusFeminino = false;
             var predio;            
             var imagemBanheiro;
-            var cardBanheiro;   
+            var cardBanheiro = item.id;   
 
             if (item.tipo === "M") {
                 imagemBanheiro = "images/banheiro-masculino.jpg";
-                cardBanheiro = "masculino";
+                
             } else {
                 imagemBanheiro = "images/banheiro-feminino.jpg";
-                cardBanheiro = "feminino";
             }
 
             var html = 
                 "<div class='col-sm-6 col-md-4 col-lg-3'>\
-                    <div class='thumbnail thumbnail-" + cardBanheiro + "'>\
+                    <div class='thumbnail thumbnail-" + cardBanheiro + " text-center'>\
                         <img src='" + imagemBanheiro + "' alt='...' class='imagem-card-" + cardBanheiro + " img-rounded'>\
                         <div class='caption'>\
-                            <h2 class='predio-" + cardBanheiro + "'>Prédio </h2>\
-                            <h2 class='andar-" + cardBanheiro + "'></h2>\
+                            <h3 class='predio-" + cardBanheiro + "'>Prédio </h3>\
+                            <h3 class='andar-" + cardBanheiro + "'></h3>\
                             <hr>\
                             <div class='card-alert-" + cardBanheiro + "' role='alert'>\
                                 <span class='card-status-" + cardBanheiro + "'></span>\
