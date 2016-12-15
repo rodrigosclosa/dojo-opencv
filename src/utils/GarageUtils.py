@@ -2,8 +2,8 @@ import requests
 import json
 
 class GarageApi:
-    def __init__(self, address='fc:c2:de:40:db:0f', token='rOxsxbXsj5Zm'):
-        self.BASE_URL = 'http://api.iot.ciandt.com/v2/data/'
+    def __init__(self, address='', token=''):
+        self.BASE_URL = 'https://dojo-opencv-cit.appspot.com/_ah/api/status/v1/new'
         self.ADDRESS = address
         self.TOKEN = token
 
